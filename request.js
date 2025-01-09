@@ -1,5 +1,4 @@
 import "dotenv/config.js";
-import 'open';
 
 async function getZDArticle() {
     const response = await fetch(`https://${process.env.ZENDESK_SUBDOMAIN}.com/api/v2/help_center/en-us/articles/${process.env.ZENDESK_ARTICLE_ID}`, {
@@ -62,3 +61,4 @@ async function createSimpplrPage(content) {
     console.log(data)
 }
 
+getSalesforceAccessToken();
