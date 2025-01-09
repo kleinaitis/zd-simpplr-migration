@@ -1,4 +1,5 @@
-require('dotenv').config()
+import "dotenv/config.js";
+import 'open';
 
 async function getZDArticle() {
     const response = await fetch(`https://${process.env.ZENDESK_SUBDOMAIN}.com/api/v2/help_center/en-us/articles/${process.env.ZENDESK_ARTICLE_ID}`, {
@@ -14,6 +15,24 @@ async function getZDArticle() {
     console.log(data.article.body)
 }
 
+async function getSalesforceAccessToken() {
+    const clientCredentials = btoa(`${process.env.SALESFORCE_CONSUMER_KEY}:${process.env.SALESFORCE_CLIENT_SECRET}`);
+    const salesforceEndPoint = `${process.env.SALESFORCE_DOMAIN_URL}/services/oauth2/token`;
+    const params = {
+        grant_type: "client_credentials",
+    }
+    const response = await fetch(`${salesforceEndPoint}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "Authorization": `Basic ${clientCredentials}`,
+        },
+        body: new URLSearchParams(params).toString(),
+    });
+
+    const data = await response.json();
+    return data.access_token;
+}
 async function authorizeSimpplr() {
 
 }
