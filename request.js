@@ -32,7 +32,20 @@ export async function getSalesforceAccessToken() {
     const data = await response.json();
     return data.access_token;
 }
-async function authorizeSimpplr() {
+export async function authorizeSimpplr(accessToken) {
+    const response = await fetch(`${process.env.SIMPPLR_SITE_URL}`, {
+        method: "GET",
+        headers: {
+            accept: 'application/json',
+            "Authorization": `Bearer ${accessToken}`,
+            'x-user-email': `${process.env.SIMPPLR_USER_EMAIL}`
+        },
+    });
+    const data = await response.json();
+    console.log(data)
+}
+async function getSimpplrSites() {
+
 }
 async function createSimpplrPage(content) {
     const encodedParams = new URLSearchParams();
