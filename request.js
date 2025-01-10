@@ -14,7 +14,7 @@ async function getZDArticle() {
     console.log(data.article.body)
 }
 
-async function getSalesforceAccessToken() {
+export async function getSalesforceAccessToken() {
     const clientCredentials = btoa(`${process.env.SALESFORCE_CONSUMER_KEY}:${process.env.SALESFORCE_CLIENT_SECRET}`);
     const salesforceEndPoint = `${process.env.SALESFORCE_DOMAIN_URL}/services/oauth2/token`;
     const params = {
@@ -33,7 +33,6 @@ async function getSalesforceAccessToken() {
     return data.access_token;
 }
 async function authorizeSimpplr() {
-
 }
 async function createSimpplrPage(content) {
     const encodedParams = new URLSearchParams();
@@ -60,5 +59,3 @@ async function createSimpplrPage(content) {
     const data = await response.json();
     console.log(data)
 }
-
-getSalesforceAccessToken();
