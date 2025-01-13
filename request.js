@@ -1,6 +1,7 @@
 import "dotenv/config.js";
 
 async function getZDArticle() {
+    let zendeskArticleData;
     const response = await fetch(`https://${process.env.ZENDESK_SUBDOMAIN}.com/api/v2/help_center/en-us/articles/${process.env.ZENDESK_ARTICLE_ID}`, {
         method: "GET",
         headers: {
@@ -10,8 +11,16 @@ async function getZDArticle() {
     });
 
     const data = await response.json();
-    // Other useful properties returned: id, url, html_url, draft, name, title, label_names, body
-    console.log(data.article.body)
+
+    zendeskArticleData = {
+        articleBody: data.article.body,
+        articleId: data.article.id,
+        articleTitle: data.article.title,
+        articleURL: data.article.html_url,
+        articleJSON: data.article.url,
+
+    }
+    return zendeskArticleData;
 }
 
 export async function getSalesforceAccessToken() {
@@ -35,6 +44,7 @@ export async function getSalesforceAccessToken() {
 export async function authorizeSimpplr(accessToken) {
     const response = await fetch(`${process.env.SIMPPLR_SITE_URL}`, {
         method: "GET",
+        grant_type: 'authorization_code',
         headers: {
             accept: 'application/json',
             "Authorization": `Bearer ${accessToken}`,
