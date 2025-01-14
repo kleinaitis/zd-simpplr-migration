@@ -59,7 +59,10 @@ export async function getSimpplrRefreshToken() {
         })
     });
     const data = await response.json();
-    console.log(data)
+    const accessToken = data.access_token
+    const refreshToken = data.refresh_token
+
+    return { accessToken, refreshToken }
 }
 
 // Returns access token
@@ -81,4 +84,19 @@ export async function getSimpplrAccessToken() {
     });
     const data = await response.json();
     return data.access_token
+}
+
+export async function createSimpplrPage(accessToken) {
+
+    const response = await fetch(`https://platform.app.simpplr.com/v1/content/sites/list`, {
+        method: "POST",
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${accessToken}`
+        },
+    });
+
+    const data = await response.json();
+    console.log(data.result.listOfItems)
 }
