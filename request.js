@@ -41,15 +41,21 @@ export async function getSalesforceAccessToken() {
     const data = await response.json();
     return data.access_token;
 }
-export async function authorizeSimpplr(accessToken) {
-    const response = await fetch(`${process.env.SIMPPLR_SITE_URL}`, {
-        method: "GET",
-        grant_type: 'authorization_code',
+// Refer to steps in https://platform.simpplr.com/reference/authenticating-via-an-external-application-1
+// Redirected after consent page to get authorization code from URL
+export async function getSimpplrAccessToken() {
+
+    const response = await fetch(`${process.env.SIMPPLR_TOKEN_URL}`, {
+        method: "POST",
         headers: {
-            accept: 'application/json',
-            "Authorization": `Bearer ${accessToken}`,
-            'x-user-email': `${process.env.SIMPPLR_USER_EMAIL}`
+            'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+            grant_type: "authorization_code",
+            auth_code: `${process.env.SIMPPLR_AUTHORIZATION_CODE}`,
+            client_id: `${process.env.SIMPPLR_CLIENT_ID}`,
+            client_secret: `${process.env.SIMPPLR_CLIENT_SECRET}`,
+        })
     });
     const data = await response.json();
     console.log(data)
