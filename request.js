@@ -86,7 +86,7 @@ export async function getSimpplrAccessToken() {
     return data.access_token
 }
 
-export async function createSimpplrPage(accessToken) {
+export async function getSimpplrSites(accessToken) {
 
     const response = await fetch(`https://platform.app.simpplr.com/v1/content/sites/list`, {
         method: "POST",
