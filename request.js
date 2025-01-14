@@ -43,7 +43,8 @@ export async function getSalesforceAccessToken() {
 }
 // Refer to steps in https://platform.simpplr.com/reference/authenticating-via-an-external-application-1
 // Redirected after consent page to get authorization code from URL
-export async function getSimpplrAccessToken() {
+// Current refresh token expires 90 days after 01/14/2025
+export async function getSimpplrRefreshToken() {
 
     const response = await fetch(`${process.env.SIMPPLR_TOKEN_URL}`, {
         method: "POST",
@@ -60,31 +61,24 @@ export async function getSimpplrAccessToken() {
     const data = await response.json();
     console.log(data)
 }
-async function getSimpplrSites() {
 
-}
-async function createSimpplrPage(content) {
-    const encodedParams = new URLSearchParams();
-    // Extract data from Zendesk response properties to add here
-    encodedParams.set('content-sub-type', 'news');
-    encodedParams.set('publish-at', '2022-02-12T00:00:00+05:30');
-    encodedParams.set('body', '<p>This is the basic description text.</p>');
-    encodedParams.set('summary', 'This is a custom summary text.');
-    encodedParams.set('title', 'Page created from API Portal');
-    encodedParams.set('is-feed-enabled', 'true');
-    encodedParams.set('category-name', 'News');
-    encodedParams.set('publishing-status', 'immediate');
+// Returns access token
+// Refresh token is valid for 90 days at a time as per documentation
+export async function getSimpplrAccessToken() {
 
-    const response = await fetch(`https://api.ec.simpplr.com/api/contents/site/${process.env.SIMPPLR_SITE_ID}/page`, {
+    const response = await fetch(`${process.env.SIMPPLR_TOKEN_URL}`, {
         method: "POST",
         headers: {
+            'Content-Type': 'application/json',
             accept: 'application/json',
-            'x-user-email': `${process.env.SALESFORCE_USER_EMAIL}`,
-            'content-type': 'application/x-www-form-urlencoded',
+            Authorization: `Bearer ${process.env.SIMPPLR_REFRESH_TOKEN}`
         },
-        body: encodedParams
+        body: JSON.stringify({
+            grant_type: 'refresh_token',
+            client_id: `${process.env.SIMPPLR_CLIENT_ID}`,
+            client_secret: `${process.env.SIMPPLR_CLIENT_SECRET}`,
+        })
     });
-
     const data = await response.json();
-    console.log(data)
+    return data.access_token
 }
