@@ -23,24 +23,6 @@ async function getZDArticle() {
     return zendeskArticleData;
 }
 
-export async function getSalesforceAccessToken() {
-    const clientCredentials = btoa(`${process.env.SALESFORCE_CONSUMER_KEY}:${process.env.SALESFORCE_CLIENT_SECRET}`);
-    const salesforceEndPoint = `${process.env.SALESFORCE_DOMAIN_URL}/services/oauth2/token`;
-    const params = {
-        grant_type: "client_credentials",
-    }
-    const response = await fetch(`${salesforceEndPoint}`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            "Authorization": `Basic ${clientCredentials}`,
-        },
-        body: new URLSearchParams(params).toString(),
-    });
-
-    const data = await response.json();
-    return data.access_token;
-}
 // Refer to steps in https://platform.simpplr.com/reference/authenticating-via-an-external-application-1
 // Redirected after consent page to get authorization code from URL
 // Current refresh token expires 90 days after 01/14/2025
